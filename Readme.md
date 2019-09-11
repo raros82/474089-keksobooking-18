@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Роман Рацеев](https://up.htmlacademy.ru/javascript/18/user/474089).
-* Наставник: `Неизвестно`.
+* Наставник: Олег Скляров.
 
 ---
 
