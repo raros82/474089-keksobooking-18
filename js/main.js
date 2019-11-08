@@ -11,6 +11,9 @@ var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditio
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var OFFERS_QUANTITY = 8;
 
+var ENTER_KEYCODE = 13;
+
+var PIN_ARROW_HEIGHT = 22;
 
 var generateRentalOfferMocks = function (quantity) {
   var rentalOffersMocks = [];
@@ -23,7 +26,6 @@ var generateRentalOfferMocks = function (quantity) {
     };
     rentalOffer.offer = {
       title: 'Заголовок предложения ' + i,
-      // address: getRandomInteger(0, 1200) + ', ' + getRandomInteger(130, 630),
       address: rentalOffer.location.x + ', ' + rentalOffer.location.y,
       price: getRandomInteger(100, 500),
       type: TYPE[getRandomInteger(0, 3)],
@@ -44,7 +46,7 @@ var generateRentalOfferMocks = function (quantity) {
 var mocks = generateRentalOfferMocks(OFFERS_QUANTITY);
 
 var map = document.querySelector('.map');
-map.classList.remove('map--faded');
+// map.classList.remove('map--faded');
 
 var mapPins = document.querySelector('.map__pins');
 var mapPinTemplate = document.querySelector('#pin')
@@ -60,11 +62,70 @@ var renderRentalOffer = function (offerObj) {
   return offer;
 };
 
-var fragment = document.createDocumentFragment();
-for (var i = 0; i < mocks.length; i++) {
-  fragment.appendChild(renderRentalOffer(mocks[i]));
+// var fragment = document.createDocumentFragment();
+// for (var i = 0; i < mocks.length; i++) {
+//   fragment.appendChild(renderRentalOffer(mocks[i]));
+// }
+//
+// mapPins.appendChild(fragment);
+
+
+// добавить атрибут disabled элементам input и select (или родительским fieldset) класса .ad-form в соответствии с ТЗ
+var adForm = document.querySelector('.ad-form');
+var adFormFieldset = adForm.querySelectorAll('fieldset');
+for (var i = 0; i < adFormFieldset.length; i++) {
+  adFormFieldset[i].setAttribute('disabled', 'true');
 }
 
-mapPins.appendChild(fragment);
 
+// Форма с фильтрами .map__filters заблокирована - содержит класс .map__filters--disabled
+
+var mapFilters = document.querySelector('.map__filters');
+mapFilters.classList.add('map__filters--disabled');
+
+var getElementCoord = function (DOMElement) {
+  var DOMElementRect = DOMElement.getBoundingClientRect();
+  var DOMElementCoord = {
+    // centerX: DOMElementRect.x + Math.round(DOMElementRect.width / 2) + pageXOffset,
+    centerX: DOMElementRect.offsetX,
+    // centerY: DOMElementRect.y + Math.round(DOMElementRect.height / 2) + pageYOffset,
+    centerY: DOMElementRect.offsetY,
+    // pinX: DOMElementRect.x + Math.round(DOMElementRect.width / 2) + pageXOffset,
+    pinX: DOMElementRect.offsetX,
+    // pinY: DOMElementRect.y + Math.round(DOMElementRect.height + PIN_ARROW_HEIGHT) + pageYOffset,
+    pinY: DOMElementRect.offsetY
+  };
+  return DOMElementCoord;
+};
+
+
+var inputAddress = document.querySelector('.ad-form input[name=address]');
+
+document.addEventListener('DOMContentLoaded', function () {
+  inputAddress.value = getElementCoord(mapPinMain).centerX + ', ' + getElementCoord(mapPinMain).centerY;
+});
+
+
+// добавьте обработчик события mousedown на элемент .map__pin--main
+var mapPinMain = document.querySelector('.map__pin--main');
+
+var turnPageToActiveState = function () {
+  map.classList.remove('map--faded');
+  mapFilters.classList.remove('map__filters--disabled');
+  for (var i = 0; i < adFormFieldset.length; i++) {
+    adFormFieldset[i].removeAttribute('disabled');
+  }
+  adForm.classList.remove('ad-form--disabled');
+  inputAddress.value = getElementCoord(mapPinMain).pinX + ', ' + getElementCoord(mapPinMain).pinY;
+};
+
+mapPinMain.addEventListener('mousedown', function () {
+  turnPageToActiveState();
+});
+
+mapPinMain.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    turnPageToActiveState();
+  }
+});
 
