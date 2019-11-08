@@ -129,3 +129,4 @@ mapPinMain.addEventListener('keydown', function (evt) {
   }
 });
 
+// дописал сточку для модуля5 такс 2
