@@ -129,4 +129,6 @@ mapPinMain.addEventListener('keydown', function (evt) {
   }
 });
 
-// дописал сточку для модуля5 такс 2
+// дописал сточку для module5 task 2
+// дописал сточку для module6 task 2
+
