@@ -131,4 +131,5 @@ mapPinMain.addEventListener('keydown', function (evt) {
 
 // дописал сточку для module5 task 2
 // дописал сточку для module6 task 2
+// дописал сточку для module7 task 2
 
